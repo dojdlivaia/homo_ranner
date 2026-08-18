@@ -1,1 +1,223 @@
 @import "tailwindcss";
+
+@theme {
+  --font-pixel: "Press Start 2P", "Courier New", monospace;
+  --font-body: "Rubik", "Segoe UI", system-ui, sans-serif;
+  --color-void: #12101a;
+  --color-panel: #1b1826;
+  --color-panel2: #241f33;
+  --color-line: #322c45;
+  --color-fog: #a49db8;
+  --color-chalk: #ece8dd;
+}
+
+html,
+body {
+  background: var(--color-void);
+  color: var(--color-chalk);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: #ff7a3d;
+  color: #12101a;
+}
+
+/* ---------- keycaps ---------- */
+.keycap {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  line-height: 1;
+  padding: 6px 7px 5px;
+  border: 1px solid #4a4260;
+  border-bottom-width: 3px;
+  border-radius: 5px;
+  background: #241f33;
+  color: #ece8dd;
+  white-space: nowrap;
+}
+
+/* ---------- pixel helpers ---------- */
+.pixel-shadow {
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.55);
+}
+.pixel-title {
+  font-family: var(--font-pixel);
+  letter-spacing: 0.02em;
+}
+.chunky-btn {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  border: 2px solid currentColor;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.45);
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease,
+    background-color 0.15s ease;
+}
+.chunky-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.5);
+}
+.chunky-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- canvas frame ---------- */
+.game-frame {
+  border: 2px solid #322c45;
+  box-shadow:
+    0 0 0 6px #16131f,
+    0 24px 60px rgba(0, 0, 0, 0.55);
+  image-rendering: pixelated;
+}
+.game-frame canvas {
+  image-rendering: pixelated;
+}
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.05) 3px,
+    rgba(0, 0, 0, 0.05) 4px
+  );
+}
+
+/* ---------- animations ---------- */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes banner-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.92);
+  }
+  14% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  82% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+}
+@keyframes plaque-in {
+  0% {
+    opacity: 0;
+    transform: translateX(26px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+@keyframes hard-blink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes drift-slow {
+  from {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.animate-rise {
+  animation: rise-in 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+.animate-banner {
+  animation: banner-in 2.6s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+.animate-plaque {
+  animation: plaque-in 4.4s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+.animate-blink {
+  animation: hard-blink 1.1s steps(1) infinite;
+}
+.animate-glow {
+  animation: glow-pulse 2.4s ease-in-out infinite;
+}
+.animate-drift {
+  animation: drift-slow 7s ease-in-out infinite;
+}
+
+/* scroll reveal for the chronicle cards */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* timeline segments */
+.era-seg {
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease,
+    border-color 0.5s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-banner,
+  .animate-plaque,
+  .animate-rise,
+  .animate-drift,
+  .animate-glow,
+  .animate-blink {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+  .reveal {
+    transition-duration: 0.01ms;
+  }
+}
